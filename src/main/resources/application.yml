@@ -1,1 +1,69 @@
-spring.application.name: weather-api
+#==================================
+#======== SERVER CONFIG ===========
+#==================================
+server.port: 8080
+#==================================
+#======== DATABASE CONFIG =========
+#==================================
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgresql_db:5432/weather_api_db
+    username: postgres
+    password: ${POSTGRES_PASSWORD:123}
+  #==================================
+  #======= OPENFEIGN CONFIG =========
+  #==================================
+#  cloud:
+#    openfeign:
+#      client:
+#        config:
+#          weather:
+#            url: "http://api.openweathermap.org/geo/1.0/direct?q={city_name},{state_code},{country_code}&limit={limit}&appid= ${OPENWEATHERMAP_API_KEY}"
+#            connect-timeout: 5000
+#            read-timeout: 5000
+
+  #url: "https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${api-key}"
+  #  "https://api.openweathermap.org/data/2.5/weather?units=${units}&appid=${api-key}"
+  #latitude: 30.0
+  #longitude: 30.0
+  #==================================
+  #========= JPA CONFIG =============
+  #==================================
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      format_sql: true
+      highlight_sql: true
+#==================================
+#===== CIRCUITBREAKER CONFIG ======
+#==================================
+#resilience4j:
+#  retry:
+#    instances:
+#      weather-retry:
+#        max-attempts: 3
+#        wait-duration: 3s
+#        retry-exceptions:
+#          - feign.FeignException.BadGateway
+#          - feign.FeignException.BadRequest
+#          - feign.FeignException.NotFound
+#  circuitbreaker:
+#    instances:
+#      weather-breaker:
+#        sliding-window-type: count_based
+#        sliding-window-size: 5
+#        failure-rate-threshold: 75
+#        minimum-number-of-calls: 5
+#        wait-duration-in-open-state: 10s
+#        max-wait-duration-in-half-open-state: 5s
+#        automatic-transition-from-open-to-half-open-enabled: true
+#        permitted-number-of-calls-in-half-open-state: 2
+#==================================
+#==api.openweathermap.org PARAMS ==
+#==================================
+openweathermap:
+  limit: ${LIMIT}
+  api-key: ${OPENWEATHERMAP_API_KEY}

@@ -1,27 +1,32 @@
 services:
-  postgresql:
-    container_name: weather_api_db
-    image: postgres:latest
+  postgresql_db:
+    container_name: postgresql_db
+    image: postgres:15
     environment:
-      POSTGRES_DB: weather_api
+      POSTGRES_DB: weather_api_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d weather_api" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d weather_api_db" ]
       interval: 10s
       retries: 5
       timeout: 5s
     networks:
       - weather_api_app
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
-  app:
+  weather-api:
     container_name: weather-api
-    image: openjdk:21-jdk-alpine
+    image: openjdk:21-jdk
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/weather_api
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql_db:5432/weather_api_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
@@ -33,8 +38,9 @@ services:
     networks:
       - weather_api_app
     depends_on:
-      postgresql:
-        condition: service_healthy
+      - postgresql_db
+    env_file:
+      - .env
 
 networks:
   weather_api_app:

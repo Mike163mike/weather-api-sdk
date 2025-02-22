@@ -1,4 +1,4 @@
-package com.kameleoon.weather_api;
+package com.kameleoon.weatherapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
