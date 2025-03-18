@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "weather_report")
 public class WeatherReport {
@@ -28,33 +28,35 @@ public class WeatherReport {
 
     @UpdateTimestamp
     @Column(name = "change_date")
+    @EqualsAndHashCode.Include
     private OffsetDateTime changeDate;
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
+    @EqualsAndHashCode.Include
     private CityInfo cityInfo;
 
-    @Column(name = "weather")
     @Embedded
+    @Column(name = "weather")
     private Weather weather;
 
+    @Embedded
     @Column(name = "temperature")
-    @Embedded
     private Temperature temperature;
-
-    @Column(name = "wind")
-    @Embedded
-    private Wind wind;
-
-    @Column(name = "sys")
-    @Embedded
-    private Sys sys;
 
     @Column(name = "visibility")
     private Integer visibility;
 
+    @Embedded
+    @Column(name = "wind")
+    private Wind wind;
+
     @Column(name = "date_time")
     private Long dateTime;
+
+    @Embedded
+    @Column(name = "sys")
+    private Sys sys;
 
     @Column(name = "time_zone")
     private Integer timeZone;
@@ -115,34 +117,4 @@ public class WeatherReport {
 
         private Long sunset;
     }
-
-//    "weather":
-//
-//    {
-//        "main":"Clouds",
-//            "description":"scattered clouds",
-//    },
-//            "temperature":
-//
-//    {
-//        "temp":269.6,
-//            "feels_like":267.57,
-//    },
-//            "visibility":10000,
-//            "wind":
-//
-//    {
-//        "speed":1.38,
-//    },
-//            "datetime":1675744800,
-//            "sys":
-//
-//    {
-//        "sunrise":1675751262,
-//            "sunset":1675787560
-//    },
-//            "timezone":3600,
-//            "name":"Zocca",
-
-
 }

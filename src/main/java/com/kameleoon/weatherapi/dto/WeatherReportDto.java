@@ -2,8 +2,9 @@ package com.kameleoon.weatherapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kameleoon.weatherapi.entity.WeatherReport;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,28 +14,31 @@ import lombok.*;
 public class WeatherReportDto {
 
     @JsonProperty("weather")
-    private WeatherReport.Weather weather;
+    private List<Weather> weather;
 
-    @JsonProperty("temperature")
-    private WeatherReport.Temperature temperature;
+    @JsonProperty("main")
+    private Main main;
 
     @JsonProperty("visibility")
     private Integer visibility;
 
     @JsonProperty("wind")
-    private WeatherReport.Wind wind;
+    private Wind wind;
 
     @JsonProperty("datetime")
     private Long dateTime;
 
     @JsonProperty("sys")
-    private WeatherReport.Sys sys;
+    private Sys sys;
 
     @JsonProperty("timezone")
     private Integer timeZone;
 
     @JsonProperty("name")
     private String name;
+
+    @JsonProperty("coord")
+    private Coord coord;
 
     @Getter
     @Setter
@@ -44,11 +48,17 @@ public class WeatherReportDto {
     @EqualsAndHashCode
     public static class Weather {
 
+        @JsonProperty("id")
+        private Integer id;
+
         @JsonProperty("main")
         private String main;
 
         @JsonProperty("description")
         private String description;
+
+        @JsonProperty("icon")
+        private String icon;
     }
 
     @Getter
@@ -57,13 +67,31 @@ public class WeatherReportDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode
-    public static class Temperature {
+    public static class Main {
 
         @JsonProperty("temp")
         private double temp;
 
         @JsonProperty("feels_like")
         private double feelsLike;
+
+        @JsonProperty("temp_min")
+        private double tempMin;
+
+        @JsonProperty("temp_max")
+        private double tempMax;
+
+        @JsonProperty("pressure")
+        private Integer pressure;
+
+        @JsonProperty("humidity")
+        private Integer humidity;
+
+        @JsonProperty("sea_level")
+        private Integer seaLevel;
+
+        @JsonProperty("grnd_level")
+        private Integer grndLevel;
     }
 
     @Getter
@@ -76,6 +104,9 @@ public class WeatherReportDto {
 
         @JsonProperty("speed")
         private double speed;
+
+        @JsonProperty("deg")
+        private Integer deg;
     }
 
     @Getter
@@ -86,6 +117,15 @@ public class WeatherReportDto {
     @EqualsAndHashCode
     public static class Sys {
 
+        @JsonProperty("type")
+        private Integer type;
+
+        @JsonProperty("id")
+        private Integer id;
+
+        @JsonProperty("country")
+        private String country;
+
         @JsonProperty("sunrise")
         private Long sunrise;
 
@@ -93,7 +133,24 @@ public class WeatherReportDto {
         private Long sunset;
     }
 
-    //    "weather":
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class Coord {
+
+        @JsonProperty("lon")
+        private double lon;
+
+        @JsonProperty("lat")
+        private double lat;
+    }
+}
+
+
+//    "weather":
 //
 //    {
 //        "main":"Clouds",
@@ -167,4 +224,3 @@ public class WeatherReportDto {
 //            "name": "London",
 //            "cod": 200
 //    }
-}

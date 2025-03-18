@@ -1,58 +1,69 @@
 package com.kameleoon.weatherapi.exception.advice;
 
-import com.kameleoon.weatherapi.conrtroller.WeatherReportController;
-import com.kameleoon.weatherapi.exception.ExceptionResponse;
-import com.kameleoon.weatherapi.exception.ResponseException;
+import com.kameleoon.weatherapi.exception.CustomException;
+import com.kameleoon.weatherapi.exception.ErrorResponse;
+import io.swagger.v3.oas.annotations.Hidden;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Objects;
+import java.util.List;
+import java.util.Optional;
 
 @RestControllerAdvice
+@Hidden
+@Slf4j
 public class ControllerExceptionHandler {
 
-    public static final String INVALID_FIELD_VALUES = "Invalid field values";
-
-//    @ExceptionHandler(EmailNotUniqueException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public BadValidationResponse emailNotUnique(EmailNotUniqueException e) {
-//        return new BadValidationResponse(
-//                e.getMessage(),
-//                INVALID_FIELD_VALUES,
-//                List.of("email")
-//        );
-//    }
-//
-//    @ExceptionHandler(FindingException.class)
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    public ExceptionResponse findingException(FindingException e) {
-//        return new ExceptionResponse("%s finding failure".formatted(e.getClazz()), concatMessages(e),
-//                getSource(e.getSourceClazz(), e.getSourceMethod()));
-//    }
-//
-//    @ExceptionHandler(DragException.class)
-//    public ResponseEntity<ExceptionResponse> dragException(DragException e) {
-//        return ResponseEntity
-//                .status(e.getResponseStatus() != null ? e.getResponseStatus() : HttpStatus.INTERNAL_SERVER_ERROR)
-//                .body(new ExceptionResponse("%s drag failure".formatted(e.getClazz()), concatMessages(e),
-//                        getSource(e.getSourceClazz(), e.getSourceMethod())));
-//    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleValidationExceptions(MethodArgumentNotValidException e) {
-        String errorMessage = "Validation failed: " + Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
-        return ResponseEntity
-                .status(e.getStatusCode())
-                .body(new ExceptionResponse(errorMessage, e.getCause().getMessage(),
-                        WeatherReportController.class.getSimpleName()));
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error("Unexpected error occurred", e);
+        HttpStatus status = resolveHttpStatus(e);
+        return buildErrorResponse(status, e.getMessage(), e);
     }
 
-    @ExceptionHandler(ResponseException.class)
-    public ResponseEntity<ExceptionResponse> handleResponseException(ResponseException e) {
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException e) {
+        List<String> errors = e.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                .toList();
+
+        String errorMessage = "Validation failed: " + String.join("; ", errors);
+
         return ResponseEntity
-                .status(e.getResponseStatus())
-                .body(new ExceptionResponse(e.getMessage(), e.getSourceClazz(), e.getSourceMethod()));
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(errorMessage, null, null));
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ErrorResponse> handleResponseException(CustomException e) {
+        return buildErrorResponse(e.getResponseStatus(), e.getMessage(), e);
+    }
+
+    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String message, Exception e) {
+        String causeMessage = Optional.ofNullable(e.getCause())
+                .map(Throwable::getMessage)
+                .orElse("No cause available");
+
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(message, causeMessage, null));
+    }
+
+    private HttpStatus resolveHttpStatus(Exception e) {
+        if (e instanceof ResponseStatusException ex) {
+            return (HttpStatus) ex.getStatusCode();
         }
+
+        ResponseStatus responseStatus = e.getClass().getAnnotation(ResponseStatus.class);
+        if (responseStatus != null) {
+            return responseStatus.value();
+        }
+
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
 }

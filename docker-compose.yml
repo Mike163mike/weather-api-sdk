@@ -1,7 +1,7 @@
 services:
-  postgresql_db:
-    container_name: postgresql_db
-    image: postgres:15
+  postgresql_17_db:
+    container_name: postgresql_17_db
+    image: postgres:17
     environment:
       POSTGRES_DB: weather_api_db
       POSTGRES_USER: postgres
@@ -26,7 +26,7 @@ services:
     container_name: weather-api
     image: openjdk:21-jdk
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql_db:5432/weather_api_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql_17_db:5432/weather_api_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
@@ -38,7 +38,7 @@ services:
     networks:
       - weather_api_app
     depends_on:
-      - postgresql_db
+      - postgresql_17_db
     env_file:
       - .env
 
