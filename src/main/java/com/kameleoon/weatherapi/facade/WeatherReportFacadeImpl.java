@@ -38,8 +38,11 @@ WeatherReportFacadeImpl implements WeatherReportFacade {
         log.info("CityInfoDto:===========> {}", cityInfoDto);
 
         try {
-            WeatherReportDto weatherReportDto = externalWeatherApi.getExternalWeather(cityInfo, cityInfoDto.getLatitude(),
+            WeatherReportDto weatherReportDto = externalWeatherApi.getExternalWeather(/*cityInfo,*/ cityInfoDto.getLatitude(),
                     cityInfoDto.getLongitude(), openWeatherMapProperties.getApiKey());
+
+            log.info("WeatherReportDto:===========> {}", weatherReportDto.getWeather());
+
             return weatherReportDto;
         } catch (Exception e) {
             log.error("Error while getting weather report for the city {}", cityInfo, e);

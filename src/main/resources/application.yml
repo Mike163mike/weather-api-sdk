@@ -16,7 +16,7 @@ spring:
     open-in-view: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
 #        hbm2ddl.auto: create
@@ -29,16 +29,18 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    com.kameleoon.weatherapi.client.ExternalWeatherApi: DEBUG
 
-#  sql:
-#    init:
-#      mode: always
+
+  sql:
+    init:
+      mode: always
 
   application:
-    name: Weather API SDK
+    name: The weather API SDK
 
 app:
-  name: The weather AOI
+  name: The weather API
   description: An application to retrieve weather report by city name
   version: v.1.0.0
   email: weather-api@gmail.com

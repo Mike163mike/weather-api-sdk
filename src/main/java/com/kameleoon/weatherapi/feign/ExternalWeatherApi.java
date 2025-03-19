@@ -10,20 +10,20 @@ import java.util.List;
 
 @FeignClient(
         name = "ExternalWeatherApi",
-        url = "http://api.openweathermap.org/geo/1.0/direct",
+        url = "http://api.openweathermap.org",
         configuration = FeignClientConfig.class)
 public interface ExternalWeatherApi {
 
-    @GetMapping
+    @GetMapping("/geo/1.0/direct")
     List<CityInfoDto> getCityInfo(
             @RequestParam(value = "q") String cityInfo,
             @RequestParam(value = "limit") Integer limit,
             @RequestParam(value = "appid") String apiKey
     );
 
-    @GetMapping
+    @GetMapping("/data/2.5/weather")
     WeatherReportDto getExternalWeather(
-            @RequestParam(value = "q") String cityInfo,
+//            @RequestParam(value = "q") String cityInfo,
             @RequestParam(value = "lat") Double latitude,
             @RequestParam(value = "lon") Double longitude,
             @RequestParam(value = "appid") String apiKey

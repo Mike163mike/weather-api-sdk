@@ -3,6 +3,7 @@ package com.kameleoon.weatherapi.exception.advice;
 import com.kameleoon.weatherapi.exception.CustomException;
 import com.kameleoon.weatherapi.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,47 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException e) {
         List<String> errors = e.getBindingResult().getFieldErrors().stream()
-                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                .map(fieldError -> {
+                    String field = fieldError.getField();
+                    String rejectedValue = Optional.of(fieldError.getRejectedValue())
+                            .map(Object::toString)
+                            .orElse("null");
+                    return field + " (value: " + rejectedValue + "): " + fieldError.getDefaultMessage();
+                })
                 .toList();
 
         String errorMessage = "Validation failed: " + String.join("; ", errors);
 
+        String causeMessage = Optional.ofNullable(e.getCause())
+                .map(Throwable::getMessage)
+                .orElse("No cause available");
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(errorMessage, null, null));
+                .body(new ErrorResponse(errorMessage, causeMessage, errors.toString()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException e) {
+        List<String> errors = e.getConstraintViolations().stream()
+                .map(violation -> {
+                    String field = violation.getPropertyPath().toString();
+                    String invalidValue = Optional.ofNullable(violation.getInvalidValue())
+                            .map(Object::toString)
+                            .orElse("null");
+                    return field + " (value: " + invalidValue + "): " + violation.getMessage();
+                })
+                .toList();
+
+        String errorMessage = "Validation failed: " + String.join("; ", errors);
+
+        String causeMessage = Optional.ofNullable(e.getCause())
+                .map(Throwable::getMessage)
+                .orElse("No cause available");
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(errorMessage, causeMessage, errors.toString()));
     }
 
     @ExceptionHandler(CustomException.class)
