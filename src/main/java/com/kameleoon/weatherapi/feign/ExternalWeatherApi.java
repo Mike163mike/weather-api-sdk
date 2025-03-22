@@ -1,7 +1,7 @@
 package com.kameleoon.weatherapi.feign;
 
-import com.kameleoon.weatherapi.dto.CityInfoDto;
-import com.kameleoon.weatherapi.dto.WeatherReportDto;
+import com.kameleoon.weatherapi.dto.cityinfo.CityInfoDto;
+import com.kameleoon.weatherapi.dto.weatherreport.WeatherReportDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

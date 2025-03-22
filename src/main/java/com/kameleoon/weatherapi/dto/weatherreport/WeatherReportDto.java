@@ -1,4 +1,4 @@
-package com.kameleoon.weatherapi.dto;
+package com.kameleoon.weatherapi.dto.weatherreport;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,11 +10,18 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherReportDto {
 
+    @JsonProperty("coord")
+    private Coord coord;
+
     @JsonProperty("weather")
     private List<Weather> weather;
+
+    @JsonProperty("base")
+    private String base;
 
     @JsonProperty("main")
     private Main main;
@@ -25,7 +32,10 @@ public class WeatherReportDto {
     @JsonProperty("wind")
     private Wind wind;
 
-    @JsonProperty("datetime")
+    @JsonProperty("clouds")
+    private Clouds clouds;
+
+    @JsonProperty("dt")
     private Long dateTime;
 
     @JsonProperty("sys")
@@ -34,11 +44,29 @@ public class WeatherReportDto {
     @JsonProperty("timezone")
     private Integer timeZone;
 
+    @JsonProperty("id")
+    private Integer id;
+
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty("coord")
-    private Coord coord;
+    @JsonProperty("cod")
+    private Integer cod;
+
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class Coord {
+
+        @JsonProperty("lon")
+        private double lon;
+
+        @JsonProperty("lat")
+        private double lat;
+    }
 
     @Getter
     @Setter
@@ -107,6 +135,21 @@ public class WeatherReportDto {
 
         @JsonProperty("deg")
         private Integer deg;
+
+        @JsonProperty("gust")
+        private double gust;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class Clouds {
+
+        @JsonProperty("all")
+        private Integer all;
     }
 
     @Getter
@@ -131,21 +174,6 @@ public class WeatherReportDto {
 
         @JsonProperty("sunset")
         private Long sunset;
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    public static class Coord {
-
-        @JsonProperty("lon")
-        private double lon;
-
-        @JsonProperty("lat")
-        private double lat;
     }
 }
 

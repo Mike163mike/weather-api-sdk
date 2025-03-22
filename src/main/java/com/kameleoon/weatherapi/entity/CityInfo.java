@@ -3,9 +3,6 @@ package com.kameleoon.weatherapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
@@ -37,6 +34,7 @@ public class CityInfo {
     @Column(name = "state")
     private String state;
 
-    @OneToMany(mappedBy = "cityInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<WeatherReport> weatherReports = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "weather_report_id")
+    private WeatherReport weatherReport;
 }

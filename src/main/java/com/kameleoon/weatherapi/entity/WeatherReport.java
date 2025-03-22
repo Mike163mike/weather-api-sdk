@@ -3,7 +3,6 @@ package com.kameleoon.weatherapi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 
@@ -20,21 +19,11 @@ public class WeatherReport {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer entityId;
 
     @CreationTimestamp
     @Column(name = "create_date")
     private OffsetDateTime createDate;
-
-    @UpdateTimestamp
-    @Column(name = "change_date")
-    @EqualsAndHashCode.Include
-    private OffsetDateTime changeDate;
-
-    @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
-    @EqualsAndHashCode.Include
-    private CityInfo cityInfo;
 
     @Embedded
     @Column(name = "weather")

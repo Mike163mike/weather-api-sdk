@@ -1,7 +1,7 @@
 package com.kameleoon.weatherapi.mapper;
 
-import com.kameleoon.weatherapi.dto.WeatherReportDto;
-import com.kameleoon.weatherapi.dto.WeatherResponseDto;
+import com.kameleoon.weatherapi.dto.weatherreport.WeatherReportDto;
+import com.kameleoon.weatherapi.dto.weatherreport.WeatherResponseDto;
 import com.kameleoon.weatherapi.entity.WeatherReport;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

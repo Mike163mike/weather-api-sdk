@@ -1,4 +1,4 @@
-package com.kameleoon.weatherapi.dto;
+package com.kameleoon.weatherapi.dto.cityinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

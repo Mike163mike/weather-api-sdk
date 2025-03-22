@@ -1,6 +1,6 @@
 package com.kameleoon.weatherapi.conrtroller;
 
-import com.kameleoon.weatherapi.dto.WeatherReportDto;
+import com.kameleoon.weatherapi.dto.weatherreport.WeatherResponseDto;
 import com.kameleoon.weatherapi.facade.WeatherReportFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +24,7 @@ public class WeatherReportController {
     @GetMapping("/on-demand")
     @Operation(summary = "Get weather report on demand",
             description = "Fetches the current weather report for a given city.")
-    public ResponseEntity<WeatherReportDto> onDemand(
+    public ResponseEntity<WeatherResponseDto> onDemand(
             @RequestParam
             @Pattern(regexp = "^[a-zA-Z\\s]+(,\\s?[a-zA-Z]{2})?(,\\s?[a-zA-Z]{2,3})?$", message = "Invalid city info format")
             @Schema(name = "cityInfo",

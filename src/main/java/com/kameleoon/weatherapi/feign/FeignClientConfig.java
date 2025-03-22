@@ -27,12 +27,11 @@ public class FeignClientConfig {
 
     @Bean
     public Request.Options feignOptions() {
-        return new Request.Options(5000, 10000); // Таймауты (connectTimeout, readTimeout)
+        return new Request.Options(5000, 10000);
     }
 
     @Bean
     public ErrorDecoder feignErrorDecoder() {
-        return new CustomFeignErrorDecoder(); // Ваш кастомный обработчик ошибок
+        return new CustomFeignErrorDecoder();
     }
-    }
-
+}
