@@ -10,7 +10,7 @@ import java.util.List;
 
 @FeignClient(
         name = "ExternalWeatherApi",
-        url = "http://api.openweathermap.org",
+        url = "https://api.openweathermap.org",
         configuration = FeignClientConfig.class)
 public interface ExternalWeatherApi {
 
@@ -23,7 +23,6 @@ public interface ExternalWeatherApi {
 
     @GetMapping("/data/2.5/weather")
     WeatherReportDto getExternalWeather(
-//            @RequestParam(value = "q") String cityInfo,
             @RequestParam(value = "lat") Double latitude,
             @RequestParam(value = "lon") Double longitude,
             @RequestParam(value = "appid") String apiKey

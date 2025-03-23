@@ -15,8 +15,8 @@ public class CityInfoServiceImpl implements CityInfoService {
     private final CityInfoRepository cityInfoRepository;
 
     @Override
-    public CityInfo saveCityInfo(CityInfo cityInfo) {
-        return cityInfoRepository.save(cityInfo);
+    public void saveCityInfo(CityInfo cityInfo) {
+        cityInfoRepository.save(cityInfo);
     }
 
     @Override

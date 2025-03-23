@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CityInfoService {
 
-    CityInfo saveCityInfo(CityInfo cityInfo);
+    void saveCityInfo(CityInfo cityInfo);
 
     boolean existByName(String cityName);
 

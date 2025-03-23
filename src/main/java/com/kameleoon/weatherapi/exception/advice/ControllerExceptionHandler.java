@@ -33,7 +33,7 @@ public class ControllerExceptionHandler {
         List<String> errors = e.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> {
                     String field = fieldError.getField();
-                    String rejectedValue = Optional.of(fieldError.getRejectedValue())
+                    String rejectedValue = Optional.ofNullable(fieldError.getRejectedValue())
                             .map(Object::toString)
                             .orElse("null");
                     return field + " (value: " + rejectedValue + "): " + fieldError.getDefaultMessage();
@@ -48,7 +48,7 @@ public class ControllerExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(errorMessage, causeMessage, errors.toString()));
+                .body(new ErrorResponse(errorMessage, causeMessage, String.join("\n", errors)));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

@@ -31,15 +31,11 @@ spring:
       format_sql: true
       highlight_sql: true
 
-  logging:
-    level:
-      org.hibernate.SQL: debug
-      org.hibernate.type.descriptor.sql.BasicBinder: trace
-      com.kameleoon.weatherapi.client.ExternalWeatherApi: DEBUG
-
   sql:
     init:
       mode: always
 
-  application:
-    name: The weather API SDK
+logging:
+  level:
+    org.hibernate.SQL: warn
+    org.hibernate.type.descriptor.sql.BasicBinder: warn

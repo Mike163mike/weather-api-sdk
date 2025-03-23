@@ -29,12 +29,12 @@ public class WeatherReportController {
             @Pattern(regexp = "^[a-zA-Z\\s]+(,\\s?[a-zA-Z]{2})?(,\\s?[a-zA-Z]{2,3})?$", message = "Invalid city info format")
             @Schema(name = "cityInfo",
                     description = """
-                    City information: The string has three parts separated by commas. The first part is the city name,
-                    the second part is the state code (for the US only), and the third part is the country code.
-                    We recommend using ISO 3166 country codes. Only the first part of the string is required, while the
-                    other parts can be empty strings.
-                    """,
-            example = "London,GB")
+                            City information: The string has three parts separated by commas. The first part is the city name,
+                            the second part is the state code (for the US only), and the third part is the country code.
+                            We recommend using ISO 3166 country codes. Only the first part of the string is required, while the
+                            other parts can be empty strings.
+                            """,
+                    example = "London,GB")
             String cityInfo) {
         return ResponseEntity.ok(weatherReportFacade.getWeatherReport(cityInfo));
     }
