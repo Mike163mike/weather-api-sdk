@@ -1,49 +1,50 @@
 package com.kameleoon.weatherapi.service.weatherreport.impl;
 
-import com.kameleoon.weatherapi.config.AppProperties;
+import com.kameleoon.weatherapi.IntegrationTestBase;
 import com.kameleoon.weatherapi.entity.WeatherReport;
-import com.kameleoon.weatherapi.service.WeatherReportService;
-import org.junit.jupiter.api.Assertions;
+import com.kameleoon.weatherapi.repository.WeatherReportRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Spy;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
 import java.time.OffsetDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ExtendWith(MockitoExtension.class)
-class WeatherReportServiceImplTest {
+class WeatherReportServiceImplTest extends IntegrationTestBase {
 
-    private AppProperties appProperties;
+    @Mock
+    private WeatherReportRepository weatherReportRepository;
 
-    @Spy
-    private WeatherReportService weatherReportService;
+    @InjectMocks
+    private WeatherReportServiceImpl weatherReportServiceImpl;
 
     @BeforeEach
-    void setUp() {
-        appProperties = new AppProperties();
-        appProperties.setLimit(1);
-        appProperties.setApiKey("test-key");
-        appProperties.setExpiredTime(Duration.ofMinutes(10));
+    protected void setUp() {
+        super.setUp();
+        weatherReportServiceImpl = new WeatherReportServiceImpl(appProperties, weatherReportRepository);
     }
 
     @Test
     void notExpired_givenNotExpiredDate_returnsTrue() {
         WeatherReport weatherReport = new WeatherReport();
         weatherReport.setCreateDate(OffsetDateTime.now().minusMinutes(5));
-        boolean notExpired = weatherReportService.notExpired(weatherReport);
+        boolean notExpired = weatherReportServiceImpl.notExpired(weatherReport);
 
-        Assertions.assertTrue(notExpired);
+        assertTrue(notExpired);
     }
 
     @Test
     void notExpired_givenExpiredDate_returnsFalse() {
         WeatherReport weatherReport = new WeatherReport();
         weatherReport.setCreateDate(OffsetDateTime.now().minusMinutes(15));
-        boolean notExpired = weatherReportService.notExpired(weatherReport);
+        boolean notExpired = weatherReportServiceImpl.notExpired(weatherReport);
 
-        Assertions.assertFalse(notExpired);
+        assertFalse(notExpired);
     }
 }
