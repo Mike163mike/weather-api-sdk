@@ -27,6 +27,5 @@ public class CityInfoServiceImplTest extends IntegrationTestBase {
 
         String cityNameTwo = cityInfoServiceImpl.getCityName("New York,NY,US");
         assertEquals("New York", cityNameTwo);
-
     }
 }

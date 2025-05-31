@@ -40,7 +40,7 @@ class WeatherReportServiceImplTest extends IntegrationTestBase {
     }
 
     @Test
-    void notExpired_givenExpiredDate_returnsFalse() {
+    void expired_givenExpiredDate_returnsFalse() {
         WeatherReport weatherReport = new WeatherReport();
         weatherReport.setCreateDate(OffsetDateTime.now().minusMinutes(15));
         boolean notExpired = weatherReportServiceImpl.notExpired(weatherReport);
